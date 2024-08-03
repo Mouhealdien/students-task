@@ -1,17 +1,16 @@
-import { useState } from "react";
 import "./App.css";
-import { useGetPokemonByNameQuery } from "../lib/redux/services/pokemon";
-import FilteredTable from "../components/table/FilteredTable";
-import SideBar from "../components/SideBar";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
 function App() {
-  const { data, error, isLoading } = useGetPokemonByNameQuery("bulbasaur");
-  console.log(data);
   return (
     <>
-      <div style={{ padding: 20 }}>
-        <FilteredTable />
-      </div>
-      <SideBar />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
