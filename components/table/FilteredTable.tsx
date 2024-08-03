@@ -8,13 +8,15 @@ import {
   Stack,
   Typography,
   Box,
+  Button,
 } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import DynamicTable from "./DynamicTable";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs from "dayjs"; // Import dayjs
-
+import AddIcon from "@mui/icons-material/Add";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 const FilteredTable = () => {
   const [rows, setRows] = useState([
     {
@@ -98,10 +100,40 @@ const FilteredTable = () => {
     );
   };
 
-  const headers = ["FName", "Lname", "age", "date"];
+  const headers = [
+    "FName",
+    "Lname",
+    "age",
+    "date",
+    "FName",
+    "Lname",
+    "age",
+    "date",
+    "age",
+    "date",
+  ];
 
   return (
-    <>
+    <div style={{ marginTop: "20px" }}>
+      <Stack
+        justifyItems={"center"}
+        justifyContent={"space-between"}
+        alignItems={"center"}
+        direction={"row"}
+      >
+        <Typography gutterBottom variant="h4">
+          Student Data
+        </Typography>
+        <Button
+          type="submit"
+          variant="contained"
+          sx={{ backgroundColor: "#1f7bf4" }}
+          color="primary"
+        >
+          Add Student <AddIcon />
+        </Button>
+      </Stack>
+
       <Stack
         justifyItems={"center"}
         justifyContent={"center"}
@@ -110,15 +142,15 @@ const FilteredTable = () => {
         spacing={2}
         marginBottom={2}
       >
-        <Typography width={150} paragraph sx={{ color: "#1f7bf4" }}>
-          Filter By
+        <Typography paragraph sx={{ width: "fit", color: "#1f7bf4" }}>
+          Filter By :
         </Typography>
         <TextField
           label="Search by first name and last name"
           variant="outlined"
-          fullWidth
           margin="normal"
           onChange={handleNameFilterChange}
+          sx={{ width: "500px" }}
         />
 
         <FormControl variant="outlined" fullWidth margin="normal">
@@ -173,8 +205,10 @@ const FilteredTable = () => {
           </Stack>
         </FormControl>
       </Stack>
+      <hr style={{ marginTop: "20px", marginBottom: "20px" }} />
       <DynamicTable headers={headers} data={filteredRows} />
-    </>
+      <hr style={{ marginTop: "20px", marginBottom: "20px" }} />
+    </div>
   );
 };
 
