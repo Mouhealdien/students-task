@@ -3,8 +3,12 @@ import SideBar from "../../components/SideBar";
 import { Box } from "@mui/material";
 import AuthLayout from "../../components/AuthLayout";
 import { useGetAllStudentsQuery } from "../../lib/redux/services/Api";
+import { useEffect } from "react";
 const Dashboard = () => {
-  const { data, error, isLoading } = useGetAllStudentsQuery("x");
+  const { data, error, isLoading, refetch } = useGetAllStudentsQuery("x");
+  useEffect(() => {
+    refetch();
+  }, [data, refetch]);
 
   return (
     <AuthLayout>

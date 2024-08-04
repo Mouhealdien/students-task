@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React from "react";
+import React, { useEffect } from "react";
 import {
   TextField,
   MenuItem,
@@ -10,16 +10,20 @@ import {
   Stack,
   Typography,
   Box,
+  CircularProgress,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import {
   useAddStudentMutation,
+  useEditStudentMutation,
   useGetAllGendersQuery,
   useGetAllGradesQuery,
+  useGetStudentByIdQuery,
 } from "../lib/redux/services/Api";
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
 interface FormValues {
   firstName: string;
   lastName: string;
@@ -34,43 +38,72 @@ interface FormValues {
 
 type props = {
   formClose: () => void;
+  studentId: string;
 };
 
-const AddStudenForm: React.FC = ({ formClose }: props) => {
+const UpdateStudentForm: React.FC = ({ formClose, studentId }: props) => {
+  const { data: grades } = useGetAllGradesQuery();
+  const { data: genders } = useGetAllGendersQuery();
+  const {
+    data: student,
+    isLoading,
+    refetch,
+  } = useGetStudentByIdQuery(studentId);
   const {
     control,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm<FormValues>({
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-    },
+    defaultValues: {},
     mode: "onTouched",
   });
-  const { data: grades } = useGetAllGradesQuery();
-  const { data: genders } = useGetAllGendersQuery();
-  const [addStudent] = useAddStudentMutation();
+
+  const [updateStudent] = useEditStudentMutation();
   const onSubmit = async (data: FormValues) => {
+    console.log(data.birthDate.$d);
     const formatedData = {
       ...data,
       birthDate: new Date(data.birthDate.$d).toISOString(),
+      id: studentId,
     };
     console.log(formatedData);
-    await toast.promise(addStudent(formatedData).unwrap(), {
+    await toast.promise(updateStudent(formatedData).unwrap(), {
       pending: "pending",
       success: "resolved ",
       error: "rejected ",
     });
-    reset();
   };
+
+  useEffect(() => {
+    if (student) {
+      console.log(student);
+      reset({
+        firstName: student?.firstName,
+        lastName: student?.lastName,
+        birthDate: student.birthDate ? dayjs(student.birthDate) : null,
+        grade: student?.grade.id,
+        country: student?.country,
+        city: student?.city,
+        gender: student?.gender.id,
+        phone: student?.phone,
+        remarks: student?.remarks,
+      });
+    }
+  }, [student, reset]);
+  //defaultValue={}
+  if (isLoading)
+    return (
+      <Box sx={{ textAlign: "center", paddingY: 20 }}>
+        <CircularProgress />
+      </Box>
+    );
 
   return (
     <Box sx={{ boxShadow: 3 }}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={3} sx={{ maxWidth: 800, margin: "0 auto", padding: 3 }}>
-          <Typography variant="h4">Add Student</Typography>
+          <Typography variant="h4">Update Student</Typography>
 
           <Stack gap={3} direction={"row"}>
             <Controller
@@ -102,6 +135,7 @@ const AddStudenForm: React.FC = ({ formClose }: props) => {
               render={({ field }) => (
                 <TextField
                   {...field}
+                  defaultValue={student?.lastName}
                   label="Last Name"
                   variant="outlined"
                   fullWidth
@@ -168,6 +202,7 @@ const AddStudenForm: React.FC = ({ formClose }: props) => {
                   <Select
                     {...field}
                     label="grade"
+                    defaultValue={student?.grade.id}
                     sx={{
                       "& .MuiOutlinedInput-root": {
                         "& fieldset": {
@@ -183,8 +218,6 @@ const AddStudenForm: React.FC = ({ formClose }: props) => {
                         </MenuItem>
                       );
                     })}
-                    {/* <MenuItem value="male-ذكر">male</MenuItem>
-                    <MenuItem value="female-انثى">female</MenuItem> */}
                   </Select>
                   {errors.grade && (
                     <Typography color="red">{errors.grade.message}</Typography>
@@ -204,10 +237,11 @@ const AddStudenForm: React.FC = ({ formClose }: props) => {
                   variant="outlined"
                   error={!!errors.country}
                 >
-                  <InputLabel>County</InputLabel>
+                  <InputLabel>Country</InputLabel>
                   <Select
                     {...field}
                     label="Country"
+                    defaultValue={student?.country}
                     sx={{
                       "& .MuiOutlinedInput-root": {
                         "& fieldset": {
@@ -216,8 +250,8 @@ const AddStudenForm: React.FC = ({ formClose }: props) => {
                       },
                     }}
                   >
-                    <MenuItem value="syrie">syrie</MenuItem>
-                    <MenuItem value="egypt">egypt</MenuItem>
+                    <MenuItem value="Syria">Syria</MenuItem>
+                    <MenuItem value="Egypt">Egypt</MenuItem>
                   </Select>
                   {errors.country && (
                     <Typography color="red">
@@ -237,6 +271,7 @@ const AddStudenForm: React.FC = ({ formClose }: props) => {
                   <Select
                     {...field}
                     label="City"
+                    defaultValue={student?.city}
                     sx={{
                       "& .MuiOutlinedInput-root": {
                         "& fieldset": {
@@ -263,6 +298,7 @@ const AddStudenForm: React.FC = ({ formClose }: props) => {
               rules={{ required: "Mobile is required" }}
               render={({ field }) => (
                 <TextField
+                  defaultValue={student?.phone}
                   {...field}
                   label="Mobile"
                   variant="outlined"
@@ -291,6 +327,7 @@ const AddStudenForm: React.FC = ({ formClose }: props) => {
                 >
                   <InputLabel>Gender</InputLabel>
                   <Select
+                    defaultValue={student?.gender.id}
                     {...field}
                     label="Gender"
                     sx={{
@@ -308,8 +345,6 @@ const AddStudenForm: React.FC = ({ formClose }: props) => {
                         </MenuItem>
                       );
                     })}
-                    {/* <MenuItem value="male-ذكر">male</MenuItem>
-                    <MenuItem value="female-انثى">female</MenuItem> */}
                   </Select>
                   {errors.gender && (
                     <Typography color="red">{errors.gender.message}</Typography>
@@ -321,7 +356,7 @@ const AddStudenForm: React.FC = ({ formClose }: props) => {
           <Controller
             name="remarks"
             control={control}
-            rules={{ required: "Note is required" }}
+            //rules={{ required: "Note is required" }}
             render={({ field }) => (
               <TextField
                 {...field}
@@ -352,7 +387,7 @@ const AddStudenForm: React.FC = ({ formClose }: props) => {
               sx={{ backgroundColor: "#1f7bf4" }}
               color="primary"
             >
-              Add
+              Update
             </Button>
             <Button
               onClick={formClose}
@@ -381,4 +416,4 @@ const AddStudenForm: React.FC = ({ formClose }: props) => {
   );
 };
 
-export default AddStudenForm;
+export default UpdateStudentForm;

@@ -12,10 +12,19 @@ export const Api = createApi({
   endpoints: (builder) => ({
     getAllStudents: builder.query<unknown, string>({
       query: () => `Student/GetAll`,
+      providesTags: ['Student'],
+    }),
+
+    getAllGenders: builder.query<unknown, string>({
+      query: () => `Settings/GetAllGenders`,
+    }),
+
+    getAllGrades: builder.query<unknown, string>({
+      query: () => `Settings/GetAllGrades`,
     }),
 
     getStudentById: builder.query<unknown, string>({
-      query: (id) => `/Student/GetyId?id=${id}`,
+      query: (id) => `Student/GetyId?id=${id}`,
     }),
 
     AddStudent: builder.mutation({
@@ -24,6 +33,7 @@ export const Api = createApi({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ['Student']
     }),
 
     EditStudent: builder.mutation({
@@ -32,14 +42,16 @@ export const Api = createApi({
         method: "PUT",
         body: data,
       }),
+      invalidatesTags: ['Student']
     }),
 
     RemoveStudent: builder.mutation({
       query: (id) => ({
-        url: "Student/Edit",
+        url: `Student/Remove?id=${id}`,
         method: "Delete",
         body: id,
       }),
+      invalidatesTags: ['Student']
     }),
     
 
@@ -49,8 +61,9 @@ export const Api = createApi({
         method: "POST",
         body: data,
       }),
+      
     }),
-
+    
   }),
 })
 
@@ -60,4 +73,7 @@ export const {
   useEditStudentMutation,
   useRemoveStudentMutation ,
   useAddStudentMutation ,
-  useLoginMutation } = Api
+  useLoginMutation,
+  useGetAllGendersQuery,
+  useGetAllGradesQuery
+} = Api

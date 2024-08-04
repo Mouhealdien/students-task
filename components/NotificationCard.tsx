@@ -18,6 +18,7 @@ type NotificationCardProps = {
   btnText?: string;
   fun?: () => void;
   cardBtnText?: string;
+  studentId?: string;
 };
 
 const NotificationCard = ({
@@ -29,6 +30,7 @@ const NotificationCard = ({
   btnText,
   fun,
   cardBtnText,
+  studentId,
 }: NotificationCardProps) => {
   const [open, setOpen] = useState(false);
 
@@ -40,7 +42,7 @@ const NotificationCard = ({
     setOpen(false);
   };
   const handelLogout = () => {
-    fun ? fun() : "";
+    fun ? fun(studentId) : "";
   };
 
   return (

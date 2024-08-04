@@ -16,6 +16,8 @@ import DynamicTable from "./DynamicTable";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs from "dayjs"; // Import dayjs
 import AddIcon from "@mui/icons-material/Add";
+import StudentFormModal from "../StudentFormModal";
+import AddStudentForm from "../AddStudentForm";
 const FilteredTable = ({ data }) => {
   const [rows, setRows] = useState();
 
@@ -100,14 +102,13 @@ const FilteredTable = ({ data }) => {
         <Typography gutterBottom variant="h4">
           Student Data
         </Typography>
-        <Button
-          type="submit"
-          variant="contained"
-          sx={{ backgroundColor: "#1f7bf4" }}
-          color="primary"
-        >
-          Add Student <AddIcon />
-        </Button>
+
+        <StudentFormModal
+          btnIcon={<AddIcon />}
+          btnText={"Add Student"}
+          color="#1f7bf4"
+          FormComponent={AddStudentForm}
+        />
       </Stack>
 
       <Stack

@@ -22,8 +22,9 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import NotificationCard from "./NotificationCard";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import { clearToken } from "../lib/redux/features/authSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import LanguageSelector from "./LanguageSelector";
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
@@ -119,9 +120,10 @@ export default function PersistentDrawerLeft() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          {/* <Typography variant="h6" noWrap component="div">
             profile logo
-          </Typography>
+          </Typography> */}
+          <LanguageSelector />
         </Toolbar>
       </AppBar>
       <Drawer

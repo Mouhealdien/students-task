@@ -13,7 +13,25 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import NotificationCard from "../NotificationCard";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import StudentFormModal from "../StudentFormModal";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import UpdateStudentForm from "../UpdateStudentForm";
+import { useRemoveStudentMutation } from "../../lib/redux/services/Api";
 const DynamicTable = ({ headers, data }) => {
+  const cultureCode = useSelector((state) => state.language.cultureCode);
+
+  console.log(cultureCode);
+
+  const [removeStudent] = useRemoveStudentMutation();
+
+  const handelRemoveStudent = async (id) => {
+    await toast.promise(removeStudent(id).unwrap(), {
+      pending: "pending",
+      success: "resolved ",
+      error: "rejected ",
+    });
+  };
   return (
     <TableContainer sx={{ width: "full", borderRadius: "10px" }}>
       <Table>
@@ -41,7 +59,7 @@ const DynamicTable = ({ headers, data }) => {
               {headers.map((header) => (
                 <TableCell key={header}>
                   {header == "gender" || header == "grade"
-                    ? row[header].translations[0].name
+                    ? row[header].translations[cultureCode].name
                     : row[header] !== undefined
                     ? header == "birthDate"
                       ? new Date(row[header]).toISOString().split("T")[0]
@@ -57,6 +75,7 @@ const DynamicTable = ({ headers, data }) => {
                         sx={{ color: "white", fontSize: "50px", marginTop: 5 }}
                       />
                     }
+                    studentId={row.id}
                     title="Are You Sure?"
                     paragraph="Are you sure you want to delete this student information?"
                     color="red"
@@ -66,9 +85,14 @@ const DynamicTable = ({ headers, data }) => {
                         sx={{ fontSize: "20px", marginX: 1, color: "red" }}
                       />
                     }
+                    fun={handelRemoveStudent}
                   />
-
-                  <EditIcon sx={{ fontSize: "20px", marginX: 1 }} />
+                  <StudentFormModal
+                    color="#1f7bf4"
+                    FormComponent={UpdateStudentForm}
+                    studentId={row.id}
+                    btnIcon={<EditIcon sx={{ fontSize: "20px", marginX: 1 }} />}
+                  />
                 </Stack>
               </TableCell>
             </TableRow>
