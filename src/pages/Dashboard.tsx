@@ -2,14 +2,17 @@ import FilteredTable from "../../components/table/FilteredTable";
 import SideBar from "../../components/SideBar";
 import { Box } from "@mui/material";
 import AuthLayout from "../../components/AuthLayout";
+import { useGetAllStudentsQuery } from "../../lib/redux/services/Api";
 const Dashboard = () => {
+  const { data, error, isLoading } = useGetAllStudentsQuery("x");
+
   return (
     <AuthLayout>
       <Box
         style={{ padding: 20, backgroundColor: "white" }}
         sx={{ marginTop: "80px", marginLeft: { md: "250px" } }}
       >
-        <FilteredTable />
+        <FilteredTable data={data} />
       </Box>
       <SideBar />
     </AuthLayout>

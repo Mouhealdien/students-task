@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   TextField,
   MenuItem,
@@ -16,43 +16,21 @@ import DynamicTable from "./DynamicTable";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs from "dayjs"; // Import dayjs
 import AddIcon from "@mui/icons-material/Add";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
-const FilteredTable = () => {
-  const [rows, setRows] = useState([
-    {
-      id: 1,
-      Fname: "Alice",
-      Lname: "x",
-      date: "2024-08-02T15:12:15.400Z",
-      age: 25,
-    },
-    {
-      id: 2,
-      Fname: "Bob",
-      Lname: "y",
-      date: "2024-07-02T15:12:15.400Z",
-      age: 30,
-    },
-    {
-      id: 4,
-      Fname: "xxxxx",
-      Lname: "xx",
-      date: "2024-07-02T15:12:15.400Z",
-      age: 30,
-    },
-    {
-      id: 3,
-      Fname: "Charlie",
-      Lname: "z",
-      date: "2024-10-03T15:12:15.400Z",
-      age: 35,
-    },
-  ]);
+const FilteredTable = ({ data }) => {
+  const [rows, setRows] = useState();
 
   const [filteredRows, setFilteredRows] = useState(rows);
   const [nameFilter, setNameFilter] = useState("");
   const [dateFilter, setDateFilter] = useState<dayjs.Dayjs | null>(null);
   const [dateCondition, setDateCondition] = useState("equal");
+
+  useEffect(() => {
+    if (data) {
+      setRows(data);
+      setFilteredRows(data);
+    }
+    console.log(filteredRows);
+  }, [data, rows]);
 
   const handleNameFilterChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -83,10 +61,10 @@ const FilteredTable = () => {
     setFilteredRows(
       rows.filter((row) => {
         const matchesName =
-          row.Fname.toLowerCase().includes(name) ||
-          row.Lname.toLowerCase().includes(name);
+          row.firstName.toLowerCase().includes(name) ||
+          row.lastName.toLowerCase().includes(name);
 
-        const rowDate = dayjs(row.date);
+        const rowDate = dayjs(row.birthDate);
         const inputDate = date ? dayjs(date) : null;
 
         const matchesDate =
@@ -101,16 +79,14 @@ const FilteredTable = () => {
   };
 
   const headers = [
-    "FName",
-    "Lname",
-    "age",
-    "date",
-    "FName",
-    "Lname",
-    "age",
-    "date",
-    "age",
-    "date",
+    "firstName",
+    "lastName",
+    "birthDate",
+    "city",
+    "country",
+    "phone",
+    "gender",
+    "grade",
   ];
 
   return (

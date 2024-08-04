@@ -10,7 +10,7 @@ export const Api = createApi({
     return headers;
   }, }),
   endpoints: (builder) => ({
-    getAllStudentsName: builder.query<unknown, string>({
+    getAllStudents: builder.query<unknown, string>({
       query: () => `Student/GetAll`,
     }),
 
@@ -55,7 +55,7 @@ export const Api = createApi({
 })
 
 export const { 
-  useGetAllStudentsNameQuery ,
+  useGetAllStudentsQuery ,
   useGetStudentByIdQuery,
   useEditStudentMutation,
   useRemoveStudentMutation ,
