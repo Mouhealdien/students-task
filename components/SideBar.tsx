@@ -18,16 +18,13 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
-
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import NotificationCard from "./NotificationCard";
+import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
+import { clearToken } from "../lib/redux/features/authSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 const drawerWidth = 240;
-
-{
-  /* <Div
-  sx={{ backgroundColor: { xs: "red", md: "green", lg: "blue" }, }}
->
-  //CODE
-</Div> */
-}
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   open?: boolean;
@@ -73,21 +70,39 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
   justifyContent: "flex-end",
+}));
+
+const DrawerContent = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  height: "100%",
+  padding: theme.spacing(2),
+  boxSizing: "border-box",
+}));
+
+const DrawerFooter = styled(Box)(() => ({
+  marginTop: "auto",
 }));
 
 export default function PersistentDrawerLeft() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleDrawerOpen = () => {
     setOpen(true);
   };
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const Logout = () => {
+    dispatch(clearToken());
+    navigate("/");
+    console.log("done");
   };
 
   return (
@@ -122,13 +137,7 @@ export default function PersistentDrawerLeft() {
         anchor="left"
         open={open}
       >
-        <DrawerHeader
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
+        <DrawerHeader>
           <div> LOGO</div>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "ltr" ? (
@@ -139,19 +148,35 @@ export default function PersistentDrawerLeft() {
           </IconButton>
         </DrawerHeader>
         <Divider />
-        <List>
-          {["Student's Data"].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
+        <DrawerContent>
+          <List>
+            {["Student's Data"].map((text, index) => (
+              <ListItem key={text} disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  </ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+          <DrawerFooter>
+            <NotificationCard
+              logo={
+                <ErrorOutlineIcon
+                  sx={{ color: "white", fontSize: "50px", marginTop: 5 }}
+                />
+              }
+              title="Sign Out"
+              paragraph="Are you sure you would like to logout of your account?"
+              color="#1f7bf4"
+              btnIcon={<PowerSettingsNewIcon />}
+              btnText="Logout"
+              fun={Logout}
+            />
+          </DrawerFooter>
+        </DrawerContent>
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
