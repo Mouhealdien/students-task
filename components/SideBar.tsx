@@ -25,6 +25,7 @@ import { clearToken } from "../lib/redux/features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import LanguageSelector from "./LanguageSelector";
+import PersonIcon from "@mui/icons-material/Person";
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
@@ -110,19 +111,21 @@ export default function PersistentDrawerLeft() {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
-        <Toolbar>
+        <Toolbar
+          sx={{
+            bgcolor: "white",
+            display: "flex",
+            justifyContent: !open ? "space-between" : "end",
+          }}
+        >
           <IconButton
-            color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            sx={{ mr: 2, ...(open && { display: "none" }) }}
+            sx={{ color: "gray", mr: 2, ...(open && { display: "none" }) }}
           >
             <MenuIcon />
           </IconButton>
-          {/* <Typography variant="h6" noWrap component="div">
-            profile logo
-          </Typography> */}
           <LanguageSelector />
         </Toolbar>
       </AppBar>
@@ -156,7 +159,7 @@ export default function PersistentDrawerLeft() {
               <ListItem key={text} disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                    <PersonIcon />
                   </ListItemIcon>
                   <ListItemText primary={text} />
                 </ListItemButton>
@@ -175,6 +178,7 @@ export default function PersistentDrawerLeft() {
               color="#1f7bf4"
               btnIcon={<PowerSettingsNewIcon />}
               btnText="Logout"
+              cardBtnText="Logout"
               fun={Logout}
             />
           </DrawerFooter>

@@ -89,6 +89,7 @@ const FilteredTable = ({ data }) => {
     "phone",
     "gender",
     "grade",
+    "remarks",
   ];
 
   return (
@@ -112,14 +113,14 @@ const FilteredTable = ({ data }) => {
       </Stack>
 
       <Stack
-        justifyItems={"center"}
-        justifyContent={"center"}
-        alignItems={"center"}
-        direction={"row"}
+        justifyItems={{ md: "center" }}
+        justifyContent={{ md: "center" }}
+        alignItems={{ md: "center" }}
+        direction={{ md: "row", sm: "column" }}
         spacing={2}
         marginBottom={2}
       >
-        <Typography paragraph sx={{ width: "fit", color: "#1f7bf4" }}>
+        <Typography paragraph sx={{ width: "120px", color: "#1f7bf4" }}>
           Filter By :
         </Typography>
         <TextField
@@ -127,7 +128,15 @@ const FilteredTable = ({ data }) => {
           variant="outlined"
           margin="normal"
           onChange={handleNameFilterChange}
-          sx={{ width: "500px" }}
+          sx={{
+            width: { md: "500px" },
+            "& .MuiInputBase-root": {
+              height: 40,
+            },
+            "& .MuiInputLabel-root": {
+              top: -8, // Adjust label position if needed
+            },
+          }}
         />
 
         <FormControl variant="outlined" fullWidth margin="normal">
@@ -145,6 +154,7 @@ const FilteredTable = ({ data }) => {
                   "&:hover .MuiOutlinedInput-notchedOutline": {
                     borderRight: "rgba(228, 219, 233, 0.25)",
                   },
+                  height: 40,
                 }}
                 value={dateCondition}
                 onChange={handleDateConditionChange}
@@ -157,8 +167,8 @@ const FilteredTable = ({ data }) => {
             <div
               style={{
                 borderLeft: "1px solid lightgray",
-                height: "40px",
-                paddingTop: "10px",
+                height: "20px",
+                paddingTop: "13px",
                 paddingBottom: "10px",
                 marginTop: "7px",
                 marginBottom: "2px",
@@ -171,6 +181,7 @@ const FilteredTable = ({ data }) => {
                 sx={{
                   "& .MuiInputBase-root": {
                     borderRadius: 0,
+                    height: 40,
                   },
                   "& .MuiOutlinedInput-notchedOutline": {
                     borderRadius: 0,
