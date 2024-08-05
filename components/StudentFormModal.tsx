@@ -28,9 +28,6 @@ const StudentFormModal = ({
   const handleClose = () => {
     setOpen(false);
   };
-  const handelLogout = () => {
-    fun ? fun() : "";
-  };
 
   const formClose = () => {
     setOpen(false);
@@ -45,6 +42,14 @@ const StudentFormModal = ({
           "&:focus": {
             outline: "none",
           },
+
+          "&:hover": {
+            bgcolor: btnText ? "#1f7bf4" : "",
+            color: btnText ? "white" : "",
+            translate: " 0 10%",
+          },
+          bgcolor: btnText ? "#1f7bf4" : "",
+          color: btnText ? "white" : "",
         }}
         onClick={handleClickOpen}
       >

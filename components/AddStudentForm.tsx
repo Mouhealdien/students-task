@@ -20,6 +20,7 @@ import {
   useGetAllGradesQuery,
 } from "../lib/redux/services/Api";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 interface FormValues {
   firstName: string;
   lastName: string;
@@ -37,6 +38,7 @@ type props = {
 };
 
 const AddStudenForm: React.FC = ({ formClose }: props) => {
+  const cultureCode = useSelector((state) => state.language.cultureCode);
   const {
     control,
     handleSubmit,
@@ -70,7 +72,12 @@ const AddStudenForm: React.FC = ({ formClose }: props) => {
     <Box sx={{ boxShadow: 3 }}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={3} sx={{ maxWidth: 800, margin: "0 auto", padding: 3 }}>
-          <Typography variant="h4">Add Student</Typography>
+          <Typography
+            sx={{ direction: cultureCode == "0" ? "ltr  " : "rtl" }}
+            variant="h4"
+          >
+            {cultureCode == "0" ? "Add Student " : "  اضافة طالب"}
+          </Typography>
 
           <Stack gap={3} direction={"row"}>
             <Controller
@@ -352,7 +359,7 @@ const AddStudenForm: React.FC = ({ formClose }: props) => {
               sx={{ backgroundColor: "#1f7bf4" }}
               color="primary"
             >
-              Add
+              {cultureCode == "0" ? "Add" : "اضافة "}
             </Button>
             <Button
               onClick={formClose}
@@ -364,7 +371,7 @@ const AddStudenForm: React.FC = ({ formClose }: props) => {
                   color: "#1f7bf4",
                   border: "1px solid #1f7bf4",
                 },
-                (theme) => ({
+                () => ({
                   "&:hover": {
                     color: "white",
                   },
@@ -372,7 +379,7 @@ const AddStudenForm: React.FC = ({ formClose }: props) => {
               ]}
               color="primary"
             >
-              Cancel
+              {cultureCode == "0" ? "Cancel" : "الغاء"}
             </Button>
           </Stack>
         </Stack>

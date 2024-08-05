@@ -24,6 +24,7 @@ import {
 } from "../lib/redux/services/Api";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
+import { useSelector } from "react-redux";
 interface FormValues {
   firstName: string;
   lastName: string;
@@ -44,11 +45,8 @@ type props = {
 const UpdateStudentForm: React.FC = ({ formClose, studentId }: props) => {
   const { data: grades } = useGetAllGradesQuery();
   const { data: genders } = useGetAllGendersQuery();
-  const {
-    data: student,
-    isLoading,
-    refetch,
-  } = useGetStudentByIdQuery(studentId);
+  const cultureCode = useSelector((state) => state.language.cultureCode);
+  const { data: student, isLoading } = useGetStudentByIdQuery(studentId);
   const {
     control,
     handleSubmit,
@@ -103,7 +101,12 @@ const UpdateStudentForm: React.FC = ({ formClose, studentId }: props) => {
     <Box sx={{ boxShadow: 3 }}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={3} sx={{ maxWidth: 800, margin: "0 auto", padding: 3 }}>
-          <Typography variant="h4">Update Student</Typography>
+          <Typography
+            sx={{ direction: cultureCode == "0" ? "ltr  " : "rtl" }}
+            variant="h4"
+          >
+            {cultureCode == "0" ? "Update Student  " : "  تحديث طالب"}
+          </Typography>
 
           <Stack gap={3} direction={"row"}>
             <Controller
@@ -378,7 +381,6 @@ const UpdateStudentForm: React.FC = ({ formClose, studentId }: props) => {
             )}
           />
 
-          {/* Submit Button */}
           <Stack direction={"row"} gap={3} justifyContent={"center"}>
             <Button
               fullWidth
@@ -387,7 +389,7 @@ const UpdateStudentForm: React.FC = ({ formClose, studentId }: props) => {
               sx={{ backgroundColor: "#1f7bf4" }}
               color="primary"
             >
-              Update
+              {cultureCode == "0" ? "Update" : "تحديث "}
             </Button>
             <Button
               onClick={formClose}
@@ -399,7 +401,7 @@ const UpdateStudentForm: React.FC = ({ formClose, studentId }: props) => {
                   color: "#1f7bf4",
                   border: "1px solid #1f7bf4",
                 },
-                (theme) => ({
+                () => ({
                   "&:hover": {
                     color: "white",
                   },
@@ -407,7 +409,7 @@ const UpdateStudentForm: React.FC = ({ formClose, studentId }: props) => {
               ]}
               color="primary"
             >
-              Cancel
+              {cultureCode == "0" ? "Cancel" : "الغاء"}
             </Button>
           </Stack>
         </Stack>

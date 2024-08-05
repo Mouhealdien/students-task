@@ -19,12 +19,12 @@ import { useSelector } from "react-redux";
 import UpdateStudentForm from "../UpdateStudentForm";
 import { useRemoveStudentMutation } from "../../lib/redux/services/Api";
 
-const DynamicTable = ({ headers = [], data = [] }) => {
-  const [order, setOrder] = useState("asc"); // 'asc' or 'desc'
-  const [orderBy, setOrderBy] = useState("firstName"); // default column to sort
+const DynamicTable = ({ headers = [], data = [], displayHeders }) => {
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("firstName");
 
-  const cultureCode = sessionStorage.getItem("cultureCode");
-  //useSelector((state) => state.language.cultureCode)
+  const cultureCode = useSelector((state) => state.language.cultureCode);
+
   const [removeStudent] = useRemoveStudentMutation();
 
   const handleRequestSort = (property) => {
@@ -64,7 +64,7 @@ const DynamicTable = ({ headers = [], data = [] }) => {
       <Table>
         <TableHead sx={{ bgcolor: "#1f7bf4", borderRadius: "50%" }}>
           <TableRow sx={{ borderRadius: "50%" }}>
-            {headers.map((header) => (
+            {displayHeders.map((header) => (
               <TableCell key={header} sx={{ color: "white" }}>
                 <TableSortLabel
                   sx={{
@@ -86,7 +86,9 @@ const DynamicTable = ({ headers = [], data = [] }) => {
               </TableCell>
             ))}
             <TableCell sx={{ color: "white" }}>
-              <TableSortLabel>actions</TableSortLabel>
+              <TableSortLabel>
+                {cultureCode == "0" ? "Actions" : "الاحداث"}
+              </TableSortLabel>
             </TableCell>
           </TableRow>
         </TableHead>
@@ -127,10 +129,16 @@ const DynamicTable = ({ headers = [], data = [] }) => {
                         />
                       }
                       studentId={row.id}
-                      title="Are You Sure?"
-                      paragraph="Are you sure you want to delete this student information?"
+                      title={
+                        cultureCode == "0" ? "Are You Sure?" : "هل أنت متأكد؟"
+                      }
+                      paragraph={
+                        cultureCode == "0"
+                          ? "Are you sure you want to delete this student information?"
+                          : "هل أنت متأكد أنك تريد حذف معلومات الطالب هذه؟"
+                      }
                       color="red"
-                      cardBtnText="Delete"
+                      cardBtnText={cultureCode == "0" ? "Delete" : "حذف"}
                       btnIcon={
                         <DeleteIcon
                           sx={{

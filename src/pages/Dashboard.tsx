@@ -12,10 +12,12 @@ import AuthLayout from "../../components/AuthLayout";
 import { useGetAllStudentsQuery } from "../../lib/redux/services/Api";
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
+import { useSelector } from "react-redux";
 const Dashboard = () => {
   const { data, refetch } = useGetAllStudentsQuery("x");
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const cultureCode = useSelector((state) => state.language.cultureCode);
   useEffect(() => {
     refetch();
   }, [data, refetch]);
@@ -43,6 +45,7 @@ const Dashboard = () => {
           marginLeft: { md: "250px" },
           marginRight: { md: "20px" },
           borderRadius: "10px",
+          direction: cultureCode == "0" ? "ltr" : "rtl",
         }}
       >
         <FilteredTable data={paginatedData} />
@@ -58,7 +61,11 @@ const Dashboard = () => {
               justifyContent={"start"}
               gap={2}
             >
-              <label style={{ color: "gray" }}>Rows per page:</label>
+              <label style={{ color: "gray" }}>
+                {cultureCode == "0"
+                  ? "Rows per page:"
+                  : "عدد الاسطر في الصفحة:"}
+              </label>
               <Select
                 value={rowsPerPage}
                 sx={{ paddingY: 0, height: 25 }}

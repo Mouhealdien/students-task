@@ -5,6 +5,7 @@ import { useLoginMutation } from "../../lib/redux/services/Api";
 import { useDispatch } from "react-redux";
 import { setToken } from "../../lib/redux/features/authSlice";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 interface FormValues {
   userName: string;
   password: string;
@@ -26,7 +27,12 @@ const Login = () => {
 
   const onSubmit = async (data: FormValues) => {
     try {
-      const userData = await login(data).unwrap();
+      const userData = await toast.promise(login(data).unwrap(), {
+        pending: "pending",
+        success: "resolved ",
+        error: "rejected ",
+      });
+
       dispatch(setToken(userData.token));
       sessionStorage.setItem("token", userData.token);
       navigate("/dashboard");

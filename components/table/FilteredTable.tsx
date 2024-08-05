@@ -14,10 +14,11 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import DynamicTable from "./DynamicTable";
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import dayjs from "dayjs"; // Import dayjs
+import dayjs from "dayjs";
 import AddIcon from "@mui/icons-material/Add";
 import StudentFormModal from "../StudentFormModal";
 import AddStudentForm from "../AddStudentForm";
+import { useSelector } from "react-redux";
 const FilteredTable = ({ data }) => {
   const [rows, setRows] = useState();
 
@@ -26,6 +27,7 @@ const FilteredTable = ({ data }) => {
   const [dateFilter, setDateFilter] = useState<dayjs.Dayjs | null>(null);
   const [dateCondition, setDateCondition] = useState("equal");
 
+  const cultureCode = useSelector((state) => state.language.cultureCode);
   useEffect(() => {
     if (data) {
       setRows(data);
@@ -92,6 +94,18 @@ const FilteredTable = ({ data }) => {
     "remarks",
   ];
 
+  const ArabicHeadres = [
+    "الاسم الأول",
+    "الاسم الأخير",
+    "تاريخ الميلاد",
+    "المدينة",
+    "البلد",
+    "الهاتف",
+    "الجنس",
+    "الصف",
+    "الملاحظات",
+  ];
+
   return (
     <div style={{ marginTop: "20px" }}>
       <Stack
@@ -99,14 +113,15 @@ const FilteredTable = ({ data }) => {
         justifyContent={"space-between"}
         alignItems={"center"}
         direction={"row"}
+        sx={{ direction: cultureCode == "0" ? "ltr" : " rtl" }}
       >
         <Typography gutterBottom variant="h4">
-          Student Data
+          {cultureCode == "0" ? "Students Data" : "بيانات الطلاب"}
         </Typography>
 
         <StudentFormModal
           btnIcon={<AddIcon />}
-          btnText={"Add Student"}
+          btnText={cultureCode == "0" ? "Add Student" : " اضافة طالب"}
           color="#1f7bf4"
           FormComponent={AddStudentForm}
         />
@@ -119,12 +134,17 @@ const FilteredTable = ({ data }) => {
         direction={{ md: "row", sm: "column" }}
         spacing={2}
         marginBottom={2}
+        sx={{ direction: cultureCode == "0" ? "ltr" : " rtl" }}
       >
         <Typography paragraph sx={{ width: "120px", color: "#1f7bf4" }}>
-          Filter By :
+          {cultureCode == "0" ? " Filter By :" : " فلترة "}
         </Typography>
         <TextField
-          label="Search by first name and last name"
+          label={
+            cultureCode == "0"
+              ? "Search by first name and last name"
+              : "البحث حسب الاسم الأول واسم العائلة "
+          }
           variant="outlined"
           margin="normal"
           onChange={handleNameFilterChange}
@@ -134,7 +154,7 @@ const FilteredTable = ({ data }) => {
               height: 40,
             },
             "& .MuiInputLabel-root": {
-              top: -8, // Adjust label position if needed
+              top: -8,
             },
           }}
         />
@@ -146,22 +166,37 @@ const FilteredTable = ({ data }) => {
                 sx={{
                   borderRadius: "0",
                   ".MuiOutlinedInput-notchedOutline": {
-                    borderRight: "rgba(228, 219, 233, 0.25)",
+                    borderRight:
+                      cultureCode == "0" ? "rgba(228, 219, 233, 0.25)" : "",
+                    borderLeft:
+                      cultureCode == "0" ? "" : "rgba(228, 219, 233, 0.25)",
                   },
                   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderRight: "rgba(228, 219, 233, 0.25)",
+                    borderRight:
+                      cultureCode == "0" ? "rgba(228, 219, 233, 0.25)" : "",
+                    borderLeft:
+                      cultureCode == "0" ? "" : "rgba(228, 219, 233, 0.25)",
                   },
                   "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderRight: "rgba(228, 219, 233, 0.25)",
+                    borderRight:
+                      cultureCode == "0" ? "rgba(228, 219, 233, 0.25)" : "",
+                    borderLeft:
+                      cultureCode == "0" ? "" : "rgba(228, 219, 233, 0.25)",
                   },
                   height: 40,
                 }}
                 value={dateCondition}
                 onChange={handleDateConditionChange}
               >
-                <MenuItem value="equal">Equal</MenuItem>
-                <MenuItem value="greater">Greater Than</MenuItem>
-                <MenuItem value="less">Less Than</MenuItem>
+                <MenuItem value="equal">
+                  {cultureCode == "0" ? "Equal" : "يساوي"}
+                </MenuItem>
+                <MenuItem value="greater">
+                  {cultureCode == "0" ? "Greater Than" : "اكبر من"}
+                </MenuItem>
+                <MenuItem value="less">
+                  {cultureCode == "0" ? "Less Than" : "اصغر من"}
+                </MenuItem>
               </Select>
             </Box>
             <div
@@ -185,7 +220,10 @@ const FilteredTable = ({ data }) => {
                   },
                   "& .MuiOutlinedInput-notchedOutline": {
                     borderRadius: 0,
-                    borderLeft: "rgba(228, 219, 233, 0.25)",
+                    borderleft:
+                      cultureCode == "0" ? "rgba(228, 219, 233, 0.25)" : "",
+                    borderright:
+                      cultureCode == "0" ? "" : "rgba(228, 219, 233, 0.25)",
                   },
                 }}
               />
@@ -194,7 +232,11 @@ const FilteredTable = ({ data }) => {
         </FormControl>
       </Stack>
       <hr style={{ marginTop: "20px", marginBottom: "20px" }} />
-      <DynamicTable headers={headers} data={filteredRows} />
+      <DynamicTable
+        displayHeders={cultureCode == 0 ? headers : ArabicHeadres}
+        headers={headers}
+        data={filteredRows}
+      />
       <hr style={{ marginTop: "20px", marginBottom: "20px" }} />
     </div>
   );

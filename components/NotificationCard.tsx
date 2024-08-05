@@ -8,6 +8,7 @@ import {
   Box,
   Stack,
 } from "@mui/material";
+import { useSelector } from "react-redux";
 
 type NotificationCardProps = {
   logo: React.ReactNode;
@@ -33,7 +34,7 @@ const NotificationCard = ({
   studentId,
 }: NotificationCardProps) => {
   const [open, setOpen] = useState(false);
-
+  const cultureCode = useSelector((state) => state.language.cultureCode);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -147,7 +148,7 @@ const NotificationCard = ({
               ]}
               color="primary"
             >
-              Cancel
+              {cultureCode == "0" ? "Cancel" : "الغاء"}
             </Button>
           </Stack>
         </DialogActions>

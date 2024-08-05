@@ -6,7 +6,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
-import Typography from "@mui/material/Typography";
+
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -16,9 +16,6 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import NotificationCard from "./NotificationCard";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import { clearToken } from "../lib/redux/features/authSlice";
@@ -26,6 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import LanguageSelector from "./LanguageSelector";
 import PersonIcon from "@mui/icons-material/Person";
+import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
@@ -89,6 +87,10 @@ const DrawerFooter = styled(Box)(() => ({
 }));
 
 export default function PersistentDrawerLeft() {
+  const cultureCode = useSelector((state) => state.language.cultureCode);
+  const EnglishPages = ["Student's Data"];
+  const ArabicPages = ["بيانات الطلاب "];
+  const pages = cultureCode == 0 ? EnglishPages : ArabicPages;
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
   const dispatch = useDispatch();
@@ -153,13 +155,21 @@ export default function PersistentDrawerLeft() {
           </IconButton>
         </DrawerHeader>
         <Divider />
-        <DrawerContent>
+        <DrawerContent sx={{ padding: 0 }}>
           <List>
-            {["Student's Data"].map((text, index) => (
-              <ListItem key={text} disablePadding>
+            {pages.map((text, index) => (
+              <ListItem
+                sx={{
+                  color: "black",
+                  bgcolor: "#edf4fe",
+                  borderLeft: "2px solid #1f7bf4 ",
+                }}
+                key={text}
+                disablePadding
+              >
                 <ListItemButton>
                   <ListItemIcon>
-                    <PersonIcon />
+                    <PersonIcon sx={{ color: "#1f7bf4" }} />
                   </ListItemIcon>
                   <ListItemText primary={text} />
                 </ListItemButton>
@@ -169,16 +179,20 @@ export default function PersistentDrawerLeft() {
           <DrawerFooter>
             <NotificationCard
               logo={
-                <ErrorOutlineIcon
+                <MeetingRoomIcon
                   sx={{ color: "white", fontSize: "50px", marginTop: 5 }}
                 />
               }
-              title="Sign Out"
-              paragraph="Are you sure you would like to logout of your account?"
+              title={cultureCode == "0" ? "Sign Out" : " تسجيل الخروج"}
+              paragraph={
+                cultureCode == "0"
+                  ? "Are you sure you would like to logout of your account?"
+                  : "  هل أنت متأكد أنك تريد تسجيل الخروج من حسابك؟"
+              }
               color="#1f7bf4"
               btnIcon={<PowerSettingsNewIcon />}
-              btnText="Logout"
-              cardBtnText="Logout"
+              btnText={cultureCode == "0" ? "Sign Out" : " تسجيل الخروج"}
+              cardBtnText={cultureCode == "0" ? "Sign Out" : " تسجيل الخروج"}
               fun={Logout}
             />
           </DrawerFooter>
