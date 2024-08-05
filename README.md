@@ -27,9 +27,11 @@ Check out the live demo of the application: [Student Dashboard Demo](https://66b
    cd student-dashboard
 
 2. **Install Dependencies**
+
    npm install
 
 3. **Install Dependencies**
+
    Run the Development Server
    Open http://localhost:5173 in your browser.
 
